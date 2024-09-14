@@ -1,0 +1,372 @@
+openapi: 3.0.0
+info:
+  title: Book Library Management System API
+  version: 1.0.0
+  description: API for managing books, authors, and genres in a library system
+tags:
+  - name: books
+    description: Operations about books
+  - name: authors
+    description: Operations about authors
+  - name: genres
+    description: Operations about genres
+
+paths:
+  /books:
+    get:
+      summary: List all books
+      operationId: getBooks
+      tags:
+        - books
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
+        - $ref: '#/components/parameters/SortParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedBooks'
+    post:
+      summary: Create a new book
+      operationId: createBook
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '201':
+          description: Book created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+
+  /books/{id}:
+    get:
+      summary: Get a specific book by ID
+      operationId: getBookById
+      tags:
+        - books
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+    put:
+      summary: Update an existing book
+      operationId: updateBookById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Book'
+      responses:
+        '200':
+          description: Book updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Book'
+    delete:
+      summary: Delete a book
+      operationId: deleteBookById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Book deleted successfully
+
+  /books/search:
+    get:
+      summary: Search books
+      operationId: searchBooks
+      tags:
+        - books
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
+        - $ref: '#/components/parameters/SortParam'
+        - name: query
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedBooks'
+
+  /books/genre/{genre}:
+    get:
+      summary: Get books by genre
+      operationId: getBooksByGenre
+      tags:
+        - books
+      parameters:
+        - name: genre
+          in: path
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
+        - $ref: '#/components/parameters/SortParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedBooks'
+
+  /authors:
+    get:
+      summary: List all authors
+      operationId: getAuthors
+      tags:
+        - authors
+      parameters:
+        - $ref: '#/components/parameters/PageParam'
+        - $ref: '#/components/parameters/SizeParam'
+        - $ref: '#/components/parameters/SortParam'
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedAuthors'
+    post:
+      summary: Create a new author
+      operationId: createAuthor
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Author'
+      responses:
+        '201':
+          description: Author created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+
+  /authors/{id}:
+    get:
+      summary: Get a specific author
+      operationId: getAuthorById
+      tags:
+        - authors
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+    put:
+      summary: Update an existing author
+      operationId: updateAuthorById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Author'
+      responses:
+        '200':
+          description: Author updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Author'
+    delete:
+      summary: Delete an author
+      operationId: deleteAuthorById
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Author deleted successfully
+
+  /genres:
+    get:
+      summary: List all genres
+      operationId: getGenres
+      tags:
+        - genres
+      responses:
+        '200':
+          description: Successful response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Genre'
+    post:
+      summary: Add a new genre
+      operationId: createGenre
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Genre'
+      responses:
+        '201':
+          description: Genre created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Genre'
+
+  /genres/{id}:
+    delete:
+      summary: Delete a genre
+      operationId: deleteGenreById
+      tags:
+        - genres
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Genre deleted successfully
+
+components:
+  parameters:
+    PageParam:
+      name: page
+      in: query
+      schema:
+        type: integer
+        default: 0
+    SizeParam:
+      name: size
+      in: query
+      schema:
+        type: integer
+        default: 20
+    SortParam:
+      name: sort
+      in: query
+      schema:
+        type: string
+  schemas:
+    Book:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        author:
+          type: string
+        isbn:
+          type: string
+        publicationDate:
+          type: string
+          format: date
+        genre:
+          type: string
+        description:
+          type: string
+        price:
+          type: number
+    Author:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        birthDate:
+          type: string
+          format: date
+        biography:
+          type: string
+    Genre:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+    PagedBooks:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Book'
+        totalPages:
+          type: integer
+        totalElements:
+          type: integer
+        size:
+          type: integer
+        number:
+          type: integer
+    PagedAuthors:
+      type: object
+      properties:
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Author'
+        totalPages:
+          type: integer
+        totalElements:
+          type: integer
+        size:
+          type: integer
+        number:
+          type: integer
