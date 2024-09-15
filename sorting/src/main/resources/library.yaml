@@ -303,43 +303,81 @@ components:
   schemas:
     Book:
       type: object
+      x-jpa-entity: true
       properties:
         id:
           type: integer
+          format: int64
+          x-jpa-column: "@Id @GeneratedValue(strategy = GenerationType.IDENTITY)"
         title:
           type: string
+          x-jpa-column: "@Column(nullable = false)"
         author:
           type: string
+          x-jpa-column: "@Column(nullable = false)"
         isbn:
           type: string
+          x-jpa-column: "@Column(unique = true, length = 13)"
         publicationDate:
           type: string
           format: date
+          x-jpa-column: "@Column(name = \"publication_date\")"
         genre:
           type: string
         description:
           type: string
+          x-jpa-column: "@Column(columnDefinition = \"TEXT\")"
         price:
           type: number
+        createdAt:
+          type: string
+          format: date-time
+          x-jpa-column: "@Column(name = \"created_at\")"
+        updatedAt:
+          type: string
+          format: date-time
+          x-jpa-column: "@Column(name = \"updated_at\")"
+        authors:
+          type: array
+          items:
+            $ref: '#/components/schemas/Author'
+          x-jpa-relationship: "@ManyToMany @JoinTable(name = \"book_authors\", joinColumns = @JoinColumn(name = \"book_id\"), inverseJoinColumns = @JoinColumn(name = \"author_id\"))"
+
     Author:
       type: object
+      x-jpa-entity: true
       properties:
         id:
           type: integer
+          format: int64
+          x-jpa-column: "@Id @GeneratedValue(strategy = GenerationType.IDENTITY)"
         name:
           type: string
+          x-jpa-column: "@Column(nullable = false)"
         birthDate:
           type: string
           format: date
+          x-jpa-column: "@Column(name = \"birth_date\")"
         biography:
           type: string
+          x-jpa-column: "@Column(columnDefinition = \"TEXT\")"
+        books:
+          type: array
+          items:
+            $ref: '#/components/schemas/Book'
+          x-jpa-relationship: "@ManyToMany(mappedBy = \"authors\")"
+
     Genre:
       type: object
+      x-jpa-entity: true
       properties:
         id:
           type: integer
+          x-jpa-column: "@Id @GeneratedValue(strategy = GenerationType.IDENTITY)"
         name:
           type: string
+          x-jpa-column: "@Column(unique = true, nullable = false, length = 50)"
+
     PagedBooks:
       type: object
       properties:
